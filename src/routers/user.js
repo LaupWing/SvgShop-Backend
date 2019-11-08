@@ -2,6 +2,14 @@ const express = require('express')
 const router = new express.Router()
 const User = require('../models/user')
 router
+    .get('/users', async (req,res)=>{
+        try{
+            const user = await User.find({})
+            res.send(user)
+        }catch(e){
+            res.status(500).send(e)
+        }
+    })
     .get('/user/me', (req,res)=>{
         res.send('users me')
     })
