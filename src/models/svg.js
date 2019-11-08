@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const validator = require( 'validator')
 
 const svgSchema = new mongoose.Schema({
     name:{
@@ -17,6 +16,6 @@ const svgSchema = new mongoose.Schema({
     }
 })
 
-const User = mongoose.model('User', userSchema)
+const Svg = mongoose.model('SVg', svgSchema)
 
-module.exports = User 
+module.exports = Svg 
