@@ -16,6 +16,6 @@ const svgSchema = new mongoose.Schema({
     }
 })
 
-const Svg = mongoose.model('SVg', svgSchema)
+const SVG = mongoose.model('SVG', svgSchema)
 
-module.exports = Svg 
+module.exports = SVG 

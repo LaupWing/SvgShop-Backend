@@ -26,6 +26,16 @@ router
             res.status(400).send(e)
         }
     })
+    .patch('/user/:id', (req,res)=>{
+        try{
+            const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators:true})
+            res.send(user)
+        }
+        catch(e){
+            res.status(400).send(e)
+        }
+
+    })
 
 
 module.exports = router
