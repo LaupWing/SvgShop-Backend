@@ -26,7 +26,7 @@ router
             res.status(400).send(e)
         }
     })
-    .patch('/user/:id', (req,res)=>{
+    .patch('/user/:id', async (req,res)=>{
         try{
             const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators:true})
             res.send(user)
