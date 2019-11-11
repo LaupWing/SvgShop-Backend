@@ -10,6 +10,9 @@ router
         const {id} = req.params
         try{
             const svg = await SVG.findById(id)
+            if(!svg){
+                return res.status(404).send()
+            }
             res.send(svg)
         }catch(e){
             res.status(500).send(e)
