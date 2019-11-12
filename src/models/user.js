@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         validate(value){
             var hasNumber = /\d/;
-            if(!hasNumber(value)){
+            if(!hasNumber.test(value)){
                 throw new Error('Password has to contain at least one number bleep bleep')
             }
         }
