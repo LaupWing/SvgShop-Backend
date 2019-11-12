@@ -14,8 +14,13 @@ router
     .get('/user/me', (req,res)=>{
         res.send('users me')
     })
-    .post('/users/login', (req,res)=>{
-        res.send('login page')
+    .post('/users/login',async (req,res)=>{
+        try{
+            const user = await User.findByCredentials(req.body.email, req.body.password)
+            res.send(user)
+        }catch(e){
+            res.status(400).send(e)
+        }
     })
     .post('/user', async (req,res)=>{
         const user = new User(req.body)
