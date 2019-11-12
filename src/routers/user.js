@@ -1,9 +1,10 @@
 const express = require('express')
 const router = new express.Router()
 const User = require('../models/user')
+const auth = require('../middleware/auth')
 
 router
-    .get('/users', async (req,res)=>{
+    .get('/users', auth,async (req,res)=>{
         try{
             const user = await User.find({})
             res.send(user)
@@ -11,7 +12,7 @@ router
             res.status(500).send(e)
         }
     })
-    .get('/user/me', (req,res)=>{
+    .get('/user/me', auth,(req,res)=>{
         res.send('users me')
     })
     .post('/user/login',async (req,res)=>{
@@ -35,7 +36,7 @@ router
             res.status(400).send(e)
         }
     })
-    .patch('/user/:id', async (req,res)=>{
+    .patch('/user/:id', auth, async (req,res)=>{
         const updates = Object.keys(req.body)
         const allowUpdates = ['name', 'email', 'password', 'age']
         const isValid = updates.every(update => allowUpdates.includes(update))
@@ -57,7 +58,7 @@ router
             res.status(400).send(e)
         }
     })
-    .delete('/user/:id', async (req,res)=>{
+    .delete('/user/:id',auth, async (req,res)=>{
         try{
            const user = await User.findByIdAndDelete(req.params.id)
            if(!user){

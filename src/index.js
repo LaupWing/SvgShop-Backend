@@ -4,14 +4,9 @@ const app = express()
 const port = process.env.PORT
 const userRouter = require('./routers/user')
 const svgRouter = require('./routers/svg')
-
+// const maintance = require('./middleware/maintance')
 app 
-    .use((req,res,next)=>{
-        if(req.method === 'GET'){
-            return res.status(503).send('Website is under construction sorry for the noise disturbance')
-        }
-        next()
-    })
+    // .use(maintance)
     .use(express.json())
     .use(userRouter)
     .use(svgRouter)
