@@ -27,8 +27,16 @@ router
         }
     })
     .patch('/user/:id', async (req,res)=>{
+        const updates = Object.keys(req.body)
+        const allowUpdates = ['name', 'email', 'password', 'age']
+        const isValid = updates.every(update => allowUpdates.includes(update))
+
+        if(!isValid)    return res.status(400).send({error: 'Invalid updates'})
         try{
             const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators:true})
+            if(!user){
+                return res.status(404).send({error:'User not found'})
+            }
             res.send(user)
         }
         catch(e){
