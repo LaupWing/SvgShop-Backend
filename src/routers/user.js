@@ -46,6 +46,15 @@ router
             res.status(500).send('HUH WHAAT')
         }
     })
+    .post('/user/logoutAll', auth, async (req,res)=>{
+        try{
+            req.user.tokens = []
+            await req.user.save()
+            res.send('You have logged out from all the devices beep beep')
+        }catch(e){
+            res.status(500).send()
+        }
+    })
     .patch('/user/:id', auth, async (req,res)=>{
         const updates = Object.keys(req.body)
         const allowUpdates = ['name', 'email', 'password', 'age']
