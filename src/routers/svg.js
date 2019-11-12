@@ -45,7 +45,10 @@ router
             return res.status(404).send('Invalid field young padawan')
         }
         try{
-            const svg = await SVG.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators:true})
+            // const svg = await SVG.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators:true}) // This methods bypasses the mongoose thats why middleware of mongoose cant be used here
+            const svg = await SVG.findById(req.params.id)
+            updates.forEach(update=>svg[update] = req.body[update])
+            await svg.save()
             if(!svg){
                 return res.status(404).send({error:'SVG not found'})
             }

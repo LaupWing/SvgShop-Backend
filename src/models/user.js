@@ -46,7 +46,8 @@ userSchema.pre('save', async function(next){ // important to use the keyword fun
     const user = this
     console.log('just before saving USER:', user)
     if(user.isModified('password')){ // check if the field of the password is modified
-        console.log('passwword modified')
+        user.password = await bcrypt.hash(user.password, 8) // 8 stands for how many hashes and 8 is the sweet spot they said
+        
     }
 
 })
