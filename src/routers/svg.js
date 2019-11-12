@@ -42,7 +42,7 @@ router
         const isValid = updates.every(update=>allowUpdates.includes(update))
 
         if(!isValid){
-            return res.status(404).send('Invalid field young padawa')
+            return res.status(404).send('Invalid field young padawan')
         }
         try{
             const svg = await SVG.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators:true})
