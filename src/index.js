@@ -4,9 +4,9 @@ const app = express()
 const port = process.env.PORT
 const userRouter = require('./routers/user')
 const svgRouter = require('./routers/svg')
-// const maintance = require('./middleware/maintance')
+// const maintenance = require('./middleware/maintenance')
 app 
-    // .use(maintance)
+    // .use(maintenance)
     .use(express.json())
     .use(userRouter)
     .use(svgRouter)

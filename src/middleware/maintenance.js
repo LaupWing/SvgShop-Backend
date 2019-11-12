@@ -1,8 +1,8 @@
-const construction = (req,res,next)=>{
+const maintenance = (req,res,next)=>{
     if(req.method === 'GET'){
         return res.status(503).send('Website is under construction sorry for the noise disturbance')
     }
     next()
 }
 
-module.exports = construction
+module.exports = maintenance

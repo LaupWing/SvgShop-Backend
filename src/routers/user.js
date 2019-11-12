@@ -4,7 +4,7 @@ const User = require('../models/user')
 const auth = require('../middleware/auth')
 
 router
-    .get('/users', auth,async (req,res)=>{
+    .get('/users',auth, async (req,res)=>{
         try{
             const user = await User.find({})
             res.send(user)
@@ -45,13 +45,12 @@ router
         try{
             // const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators:true}) // This methods bypasses the mongoose thats why middleware of mongoose cant be used here
             const user = await User.findById(req.params.id)
-
+            if(!user){
+                return res.status(404).send({error:'User not found not found in our matrix world'})
+            }
             updates.forEach(update=>user[update] = req.body[update])
             await user.save()
       
-            if(!user){
-                return res.status(404).send({error:'User not found'})
-            }
             res.send(user)
         }
         catch(e){
