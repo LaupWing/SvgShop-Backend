@@ -36,5 +36,36 @@ router
             res.status(500).send(e)
         }
     })
+    .patch('/svg/:id', async (req,res)=>{
+        const updates = Object.keys(req.body)
+        const allowUpdates = ['description', 'code', 'tags', 'name']
+        const isValid = updates.every(update=>allowUpdates.includes(update))
+
+        if(!isValid){
+            return res.status(404).send('Invalid field young padawa')
+        }
+        try{
+            const svg = await SVG.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators:true})
+            if(!svg){
+                return res.status(404).send({error:'SVG not found'})
+            }
+            res.send(svg)
+        }
+        catch(e){
+            res.status(400).send(e)
+        }
+    })
+    .delete('/svg/:id', async (req,res)=>{
+        try{
+           const svg = await SVG.findByIdAndDelete(req.params.id)
+           if(!svg){
+               return res.status(404).send('Cant find this piece of art!!')
+           } 
+           res.send('Succesfully deleted this ex-wonderful svg from this platform')
+        }
+        catch(e){
+            res.status(400).send(e)
+        }
+    })
 
 module.exports = router
