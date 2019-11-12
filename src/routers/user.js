@@ -36,6 +36,16 @@ router
             res.status(400).send(e)
         }
     })
+    .post('/user/logout',auth, async (req,res)=>{
+        try{
+            req.user.tokens = req.user.tokens.filter(token=>token.token!==req.token)
+            await req.user.save()
+            res.send('You have succesfully signed out the matrix young padawan')
+        }
+        catch(e){
+            res.status(500).send('HUH WHAAT')
+        }
+    })
     .patch('/user/:id', auth, async (req,res)=>{
         const updates = Object.keys(req.body)
         const allowUpdates = ['name', 'email', 'password', 'age']
