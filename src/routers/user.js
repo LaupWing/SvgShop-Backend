@@ -12,15 +12,15 @@ router
             res.status(500).send(e)
         }
     })
-    .get('/user/me', auth,(req,res)=>{
-        res.send('users me')
+    .get('/user', auth,(req,res)=>{
+        res.send(req.user)
     })
     .post('/user/login',async (req,res)=>{
         try{
             const user = await User.findByCredentials(req.body.email, req.body.password)
             const token = await user.generateAuthToken()
 
-            res.send({user, token})
+            res.send({user:user.getPublicProfile(), token})
         }catch(e){
             res.status(400).send(e)
         }
@@ -55,34 +55,29 @@ router
             res.status(500).send()
         }
     })
-    .patch('/user/:id', auth, async (req,res)=>{
+    .patch('/user', auth, async (req,res)=>{
         const updates = Object.keys(req.body)
         const allowUpdates = ['name', 'email', 'password', 'age']
         const isValid = updates.every(update => allowUpdates.includes(update))
-
         if(!isValid)    return res.status(400).send({error: 'Invalid updates'})
         try{
             // const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators:true}) // This methods bypasses the mongoose thats why middleware of mongoose cant be used here
-            const user = await User.findById(req.params.id)
-            if(!user){
-                return res.status(404).send({error:'User not found not found in our matrix world'})
-            }
-            updates.forEach(update=>user[update] = req.body[update])
-            await user.save()
+            updates.forEach(update=>req.user[update] = req.body[update])
+            await req.user.save()
       
-            res.send(user)
+            res.send(req.user)
         }
         catch(e){
             res.status(400).send(e)
         }
     })
-    .delete('/user/:id',auth, async (req,res)=>{
+    .delete('/user',auth, async (req,res)=>{
         try{
-           const user = await User.findByIdAndDelete(req.params.id)
-           if(!user){
-               return res.status(404).send('Huh what user is this??? I cant find it!')
-           } 
-           res.send('Deleted user')
+            await req.user.remove()             
+            res.send({
+                type: 'DELETED',
+                obj: req.user
+            })
         }
         catch(e){
             res.status(500).send(e)

@@ -58,7 +58,14 @@ userSchema.methods.generateAuthToken = async function(){
     user.save()
     return token
 }
-
+userSchema.methods.toJSON = function(){ // toJSON methods will be used behind the scenes in express
+    // JSON.stringify will be called when we send a response in express therefore the toJSON method can be used before we send something to the client
+    const user = this
+    const userObject = user.toObject()
+    delete userObject.password
+    delete userObject.tokens
+    return userObject
+}
 
 // The .static method on the schema allows us to make our own method on the User model
 userSchema.statics.findByCredentials = async (email, password)=>{
@@ -76,7 +83,6 @@ userSchema.statics.findByCredentials = async (email, password)=>{
 userSchema.pre('save', async function(next){ // important to use the keyword function here and NOT the arrow function because it alters the this binding
     // The this in this context refers to the user itself
     const user = this
-    console.log('just before saving USER:', user)
     if(user.isModified('password')){ // check if the field of the password is modified
         user.password = await bcrypt.hash(user.password, 8) // 8 stands for how many hashes and 8 is the sweet spot they said
 
