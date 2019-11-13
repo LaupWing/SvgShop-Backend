@@ -5,11 +5,26 @@ const auth = require('../middleware/auth')
 
 router
     .get('/user/svg', auth, async (req,res)=>{
-        await req.user.populate('svgs').execPopulate()
-        res.send(req.user.svgs)
+        const match = {}
+        if(req.query.private){
+            match.completed = req.query.completed === 'true'
+        }
+        try{
+            await req.user.populate({
+                path:'svgs',
+                match
+            }).execPopulate()
+            res.send(req.user.svgs)
+        }
+        catch(e){
+
+        }
     })
     .get('/user/:id/svg', async (req,res)=>{
-        const svg = await SVG.find({author:req.params.id})
+        const svg = await SVG.find({
+            author:req.params.id,
+            private: false
+        })
         res.send({
             type: 'SVG_ID_USER',
             obj: svg
@@ -23,6 +38,16 @@ router
                 return res.status(404).send()
             }
             res.send(svg)
+        }catch(e){
+            res.status(500).send(e)
+        }
+    })
+    .get('/svg', async (req,res)=>{
+        try{
+            const svgs = await SVG.find({
+                private: false
+            })
+            res.send(svgs)
         }catch(e){
             res.status(500).send(e)
         }
@@ -41,14 +66,6 @@ router
         }
         catch(e){
             res.status(400).send('Something went wrong in the server')
-        }
-    })
-    .get('/svg', async (req,res)=>{
-        try{
-            const svgs = await SVG.find({})
-            res.send(svgs)
-        }catch(e){
-            res.status(500).send(e)
         }
     })
     .patch('/svg/:id', auth,  async (req,res)=>{
