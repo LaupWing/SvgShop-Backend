@@ -49,6 +49,13 @@ const userSchema = new mongoose.Schema({
     }]
 })
 
+// The virtual method allows us to make virtual data that is not actually saved in the database, but instead uses the reference to connect to other collections to make the virtual data
+userSchema.virtual('svgs', {
+    ref: 'SVG',
+    localField: '_id',
+    foreignField: 'author'
+})
+
 // The .methods method on the sechama allows us to make our own method on the instances
 userSchema.methods.generateAuthToken = async function(){
     const user = this
@@ -85,7 +92,6 @@ userSchema.pre('save', async function(next){ // important to use the keyword fun
     const user = this
     if(user.isModified('password')){ // check if the field of the password is modified
         user.password = await bcrypt.hash(user.password, 8) // 8 stands for how many hashes and 8 is the sweet spot they said
-
     }
 
 })

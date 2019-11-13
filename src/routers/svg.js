@@ -25,7 +25,10 @@ router
         })
         try{
             await svg.save()
-            res.status(201).send('Succes')
+            res.status(201).send({
+                type: 'ADDED_SVG',
+                obj: svg
+            })
         }
         catch(e){
             res.status(400).send('Something went wrong in the server')
