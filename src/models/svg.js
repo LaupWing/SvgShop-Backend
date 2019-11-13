@@ -13,6 +13,10 @@ const svgSchema = new mongoose.Schema({
     },
     tags:{
         type: Array
+    },
+    author:{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
     }
 })
 

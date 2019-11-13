@@ -1,7 +1,7 @@
 const express = require('express')
 const router = new express.Router()
 const SVG = require('../models/svg')
-
+const auth = require('../middleware/auth')
 router
     .get('/user/svg', (req,res)=>{
         res.send('users svgs')
@@ -18,8 +18,11 @@ router
             res.status(500).send(e)
         }
     })
-    .post('/user/svg', async (req,res)=>{
-        const svg = new SVG(req.body)
+    .post('/svg', auth ,async (req,res)=>{
+        const svg = new SVG({
+            ...req.body,
+            author: req.user._id
+        })
         try{
             await svg.save()
             res.status(201).send('Succes')
