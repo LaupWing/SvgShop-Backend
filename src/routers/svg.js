@@ -2,9 +2,18 @@ const express = require('express')
 const router = new express.Router()
 const SVG = require('../models/svg')
 const auth = require('../middleware/auth')
+
 router
-    .get('/user/svg', (req,res)=>{
-        res.send('users svgs')
+    .get('/user/svg', auth, async (req,res)=>{
+        await req.user.populate('svgs').execPopulate()
+        res.send(req.user.svgs)
+    })
+    .get('/user/:id/svg', async (req,res)=>{
+        const svg = await SVG.find({author:req.params.id})
+        res.send({
+            type: 'SVG_ID_USER',
+            obj: svg
+        })
     })
     .get('/svg/:id', async (req,res)=>{
         const {id} = req.params
@@ -42,7 +51,7 @@ router
             res.status(500).send(e)
         }
     })
-    .patch('/svg/:id', async (req,res)=>{
+    .patch('/svg/:id', auth,  async (req,res)=>{
         const updates = Object.keys(req.body)
         const allowUpdates = ['description', 'code', 'tags', 'name']
         const isValid = updates.every(update=>allowUpdates.includes(update))
@@ -52,12 +61,13 @@ router
         }
         try{
             // const svg = await SVG.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators:true}) // This methods bypasses the mongoose thats why middleware of mongoose cant be used here
-            const svg = await SVG.findById(req.params.id)
-            updates.forEach(update=>svg[update] = req.body[update])
-            await svg.save()
+            console.log(req.params.id, req.user._id)
+            const svg = await SVG.findOne({_id:req.params.id, author: req.user._id})
             if(!svg){
                 return res.status(404).send({error:'SVG not found'})
             }
+            updates.forEach(update=>svg[update] = req.body[update])
+            await svg.save()
             res.send(svg)
         }
         catch(e){
@@ -66,7 +76,7 @@ router
     })
     .delete('/svg/:id', async (req,res)=>{
         try{
-           const svg = await SVG.findByIdAndDelete(req.params.id)
+           const svg = await SVG.findOneAndDelete({_id:req.params.id, author: req.user._id})
            if(!svg){
                return res.status(404).send('Cant find this piece of art!!')
            } 

@@ -47,6 +47,8 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
+},{
+    timestamps: true
 })
 
 // The virtual method allows us to make virtual data that is not actually saved in the database, but instead uses the reference to connect to other collections to make the virtual data

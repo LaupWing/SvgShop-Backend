@@ -18,7 +18,14 @@ const svgSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
+    },
+    private:{
+        type: Boolean,
+        required: true,
+        default: false
     }
+},{
+    timestamps: true
 })
 
 const SVG = mongoose.model('SVG', svgSchema)
