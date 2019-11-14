@@ -48,11 +48,10 @@ router
                 private: false
             })
             const options = {
-                page:1,
-                limit: 10
+                page:2,
+                limit: 2
             } 
             const paginate = await SVG.paginate({private:false}, options)
-            console.log(paginate)
             res.send(svgs)
         }catch(e){
             res.status(500).send(e)
