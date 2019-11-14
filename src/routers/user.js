@@ -3,8 +3,18 @@ const router = new express.Router()
 const User = require('../models/user')
 const auth = require('../middleware/auth')
 const multer = require('multer')
+
 const upload = multer({
-    dest: 'avatar'
+    limits:{
+        fileSize: 1000000
+    },
+    fileFilter(req, file , cb){
+        // cb(new Error('File must be a pdf')) // first argument is an error, second is upload pass or not (Boolean)
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+            return cb(new Error('Pleade upload a pdf'))
+        }
+        cb(undefined, true)
+    }
 })
 
 router
@@ -40,8 +50,15 @@ router
             res.status(400).send(e)
         }
     })
-    .post('/user/avatar', upload.single('avatar'), (req,res)=>{
+    .post('/user/avatar',auth, upload.single('avatar'), async (req,res)=>{
+        console.log(req.file.buffer)
+        req.user.avatar = req.file.buffer
+        await req.user.save()
         res.send()
+    },(error, req, res, next)=>{
+        res.status(400).send({
+            error: error.message
+        })
     })
     .post('/user/logout',auth, async (req,res)=>{
         try{
@@ -89,6 +106,11 @@ router
         catch(e){
             res.status(500).send(e)
         }
+    })
+    .delete('/user/avatar', auth, async (req,res)=>{
+        req.user.avatar = undefined
+        await req.user.save()
+        res.send()
     })
 
 
