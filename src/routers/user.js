@@ -3,7 +3,7 @@ const router = new express.Router()
 const User = require('../models/user')
 const auth = require('../middleware/auth')
 const multer = require('multer')
-
+const sharp = require('sharp')
 const upload = multer({
     limits:{
         fileSize: 1000000
@@ -29,6 +29,22 @@ router
     .get('/user', auth,(req,res)=>{
         res.send(req.user)
     })
+    .get('/user/:id/avatar', async(req,res)=>{
+        try{
+            const user = await User.findById(req.params.id)
+            if(!user || !user.avatar){
+                if(!avatar){
+                    throw new Error('You dont have an avatar... Ang')
+                }
+                throw new Error()
+            }
+            res.set('Content-Type', 'image/png')
+            res.send(user.avatar)
+        }
+        catch(e){
+            res.status(404).send({error: e.message})
+        }
+    })
     .post('/user/login',async (req,res)=>{
         try{
             const user = await User.findByCredentials(req.body.email, req.body.password)
@@ -51,8 +67,8 @@ router
         }
     })
     .post('/user/avatar',auth, upload.single('avatar'), async (req,res)=>{
-        console.log(req.file.buffer)
-        req.user.avatar = req.file.buffer
+        const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
+        req.user.avatar = buffer
         await req.user.save()
         res.send()
     },(error, req, res, next)=>{
