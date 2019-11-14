@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const svgSchema = new mongoose.Schema({
     name:{
@@ -27,7 +28,7 @@ const svgSchema = new mongoose.Schema({
 },{
     timestamps: true
 })
-
+svgSchema.plugin(mongoosePaginate)
 const SVG = mongoose.model('SVG', svgSchema)
 
 module.exports = SVG 

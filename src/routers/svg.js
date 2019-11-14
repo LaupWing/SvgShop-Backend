@@ -47,6 +47,12 @@ router
             const svgs = await SVG.find({
                 private: false
             })
+            const options = {
+                page:1,
+                limit: 10
+            } 
+            const paginate = await SVG.paginate({private:false}, options)
+            console.log(paginate)
             res.send(svgs)
         }catch(e){
             res.status(500).send(e)
