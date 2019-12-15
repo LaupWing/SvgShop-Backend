@@ -52,7 +52,11 @@ router
 
             res.send({user:user.getPublicProfile(), token})
         }catch(e){
-            res.status(400).send(e)
+            // The error message that is generated is made in the user model 
+            res.status(400).send({
+                type: 'error',
+                message: e.message
+            })
         }
     })
     .post('/user', async (req,res)=>{

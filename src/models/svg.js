@@ -12,11 +12,9 @@ const svgSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    tags:[{
-        tag: {
-            type: String
-        }
-    }],
+    tags:{
+        type: Array
+    },
     author:{
         type: mongoose.Schema.Types.ObjectId,
         required: true,
