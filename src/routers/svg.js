@@ -44,15 +44,15 @@ router
     })
     .get('/svg', async (req,res)=>{
         try{
-            const svgs = await SVG.find({
-                private: false
-            })
+            // const svgs = await SVG.find({
+            //     private: false
+            // })
             const options = {
-                page:2,
-                limit: 2
+                page:1,
+                limit: 20
             } 
             const paginate = await SVG.paginate({private:false}, options)
-            res.send(svgs)
+            res.send(paginate)
         }catch(e){
             res.status(500).send(e)
         }
