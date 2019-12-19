@@ -19,6 +19,7 @@ const upload = multer({
 
 router
     .get('/users',auth, async (req,res)=>{
+        console.log('getting')
         try{
             const user = await User.find({})
             res.send(user)
@@ -61,6 +62,7 @@ router
     })
     .post('/user', async (req,res)=>{
         const user = new User(req.body)
+        console.log('user acces')
         try{
             await user.save()  
             const token = await user.generateAuthToken()

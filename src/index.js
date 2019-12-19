@@ -4,9 +4,11 @@ const app = express()
 const port = process.env.PORT
 const userRouter = require('./routers/user')
 const svgRouter = require('./routers/svg')
+const cors = require('cors')
 // const maintenance = require('./middleware/maintenance')
 app 
     // .use(maintenance)
+    .use(cors())
     .use(express.json())
     .use(userRouter)
     .use(svgRouter)
