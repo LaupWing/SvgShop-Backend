@@ -50,7 +50,7 @@ router
             const user = await User.findByCredentials(req.body.email, req.body.password)
             const token = await user.generateAuthToken()
 
-            res.send({user:user.getPublicProfile(), token})
+            res.send({user, token})
         }catch(e){
             // The error message that is generated is made in the user model 
             res.status(400).send({
