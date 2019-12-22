@@ -102,7 +102,7 @@ router
            if(!svg){
                return res.status(404).send('Cant find this piece of art!!')
            } 
-           res.send('Succesfully deleted this ex-wonderful svg from this platform')
+           res.send('Succesfully sended this creation to the void')
         }
         catch(e){
             res.status(400).send(e)

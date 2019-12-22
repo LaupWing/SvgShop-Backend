@@ -12,10 +12,6 @@ const svgSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    styles:{
-        type: Object,
-        required: true
-    },
     tags:[{
         tag: {
             type: String
