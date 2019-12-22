@@ -17,7 +17,7 @@ router
             res.send(req.user.svgs)
         }
         catch(e){
-
+            res.status(500).send(e)
         }
     })
     .get('/user/:id/svg', async (req,res)=>{
@@ -62,6 +62,7 @@ router
             ...req.body,
             author: req.user._id
         })
+        console.log(req.body, req.user)
         try{
             await svg.save()
             res.status(201).send({

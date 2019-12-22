@@ -5,10 +5,13 @@ const port = process.env.PORT
 const userRouter = require('./routers/user')
 const svgRouter = require('./routers/svg')
 const cors = require('cors')
+const bodyParser = require('body-parser')
 // const maintenance = require('./middleware/maintenance')
 app 
     // .use(maintenance)
     .use(cors())
+    .use(bodyParser.json({limit: '50mb'}))
+    .use(bodyParser.urlencoded({limit: '50mb', extended: true}))
     .use(express.json())
     .use(userRouter)
     .use(svgRouter)
