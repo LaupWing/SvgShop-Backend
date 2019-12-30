@@ -4,7 +4,7 @@ const SVG = require('../models/svg')
 const auth = require('../middleware/auth')
 
 router
-    .get('/user/svg', auth, async (req,res)=>{
+    .get('/user/svgs', auth, async (req,res)=>{
         const match = {}
         if(req.query.private){
             match.completed = req.query.completed === 'true'
@@ -42,7 +42,7 @@ router
             res.status(500).send(e)
         }
     })
-    .get('/svg', async (req,res)=>{
+    .get('/svgs', async (req,res)=>{
         try{
             // const svgs = await SVG.find({
             //     private: false
