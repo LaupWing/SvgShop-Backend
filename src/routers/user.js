@@ -46,17 +46,15 @@ router
         }
     })
     .post('/user/login',async (req,res)=>{
+        console.log('logginin')
         try{
             const user = await User.findByCredentials(req.body.email, req.body.password)
             const token = await user.generateAuthToken()
-
+            console.log(user)
             res.send({user, token})
         }catch(e){
             // The error message that is generated is made in the user model 
-            res.status(400).send({
-                type: 'error',
-                message: e.message
-            })
+            res.status(400).send()
         }
     })
     .post('/user', async (req,res)=>{
@@ -83,6 +81,7 @@ router
         })
     })
     .post('/user/logout',auth, async (req,res)=>{
+        console.log('logging out')
         try{
             req.user.tokens = req.user.tokens.filter(token=>token.token!==req.token)
             await req.user.save()
