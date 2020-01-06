@@ -81,10 +81,11 @@ router
         try{
             req.user.tokens = req.user.tokens.filter(token=>token.token!==req.token)
             await req.user.save()
-            res.send('You have succesfully signed out the matrix young padawan')
+            res.send(req.user)
         }
         catch(e){
-            res.status(500).send('HUH WHAAT')
+            console.log(e)
+            res.status(500).send()
         }
     })
     .post('/user/logoutAll', auth, async (req,res)=>{
