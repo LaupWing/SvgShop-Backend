@@ -62,7 +62,6 @@ router
             ...req.body,
             author: req.user._id
         })
-        console.log(req.body, req.user)
         try{
             await svg.save()
             res.status(201).send({
@@ -84,7 +83,6 @@ router
         }
         try{
             // const svg = await SVG.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators:true}) // This methods bypasses the mongoose thats why middleware of mongoose cant be used here
-            console.log(req.params.id, req.user._id)
             const svg = await SVG.findOne({_id:req.params.id, author: req.user._id})
             if(!svg){
                 return res.status(404).send({error:'SVG not found'})

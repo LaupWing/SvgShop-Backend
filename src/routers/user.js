@@ -46,11 +46,9 @@ router
         }
     })
     .post('/user/login',async (req,res)=>{
-        console.log('logginin')
         try{
             const user = await User.findByCredentials(req.body.email, req.body.password)
             const token = await user.generateAuthToken()
-            console.log(user)
             res.send({user, token})
         }catch(e){
             // The error message that is generated is made in the user model 
@@ -58,8 +56,6 @@ router
         }
     })
     .post('/user', async (req,res)=>{
-        console.log('user acces')
-        console.log(req.body)
         const user = new User(req.body)
         try{
             await user.save()  
